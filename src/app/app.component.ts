@@ -12,6 +12,7 @@ export class AppComponent {
     let count=0;
     const id=setInterval(()=>{
       subscriber.next(count);
+      subscriber.complete();
       count++;
     },1000);
     return ()=>{
