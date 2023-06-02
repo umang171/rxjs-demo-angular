@@ -21,6 +21,13 @@ export class AppComponent {
   }
 
   constructor(){
-    this.observable.subscribe(this.observer);
+    // this.observable.subscribe(this.observer);
+    this.observable.subscribe(
+      {
+        next:(value)=>console.log(value),
+        error:(error)=>console.log(error),
+        complete:()=>console.log("complete")
+      }
+    );
   }
 }
