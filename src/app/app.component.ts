@@ -9,9 +9,15 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   // First Observable
   observable=new Observable(subscriber=>{
-    subscriber.next("Hello");
-    subscriber.next("Umang");
-    subscriber.complete();
+    let count=0;
+    const id=setInterval(()=>{
+      subscriber.next(count);
+      count++;
+    },1000);
+    return ()=>{
+      console.log("Called");
+      clearInterval(id);
+    }
   });
 
   observer={
@@ -21,13 +27,8 @@ export class AppComponent {
   }
 
   constructor(){
-    // this.observable.subscribe(this.observer);
-    this.observable.subscribe(
-      {
-        next:(value)=>console.log(value),
-        error:(error)=>console.log(error),
-        complete:()=>console.log("complete")
-      }
-    );
+    console.log("before");
+    this.observable.subscribe(this.observer);
+    console.log("after");    
   }
 }
