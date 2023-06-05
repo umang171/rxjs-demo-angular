@@ -1,6 +1,6 @@
 import { compileClassMetadata } from '@angular/compiler';
 import { Component } from '@angular/core';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable, fromEvent, of, range } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,7 +8,8 @@ import { Observable, fromEvent } from 'rxjs';
 })
 export class AppComponent {
   // First Observable
-  observable=fromEvent(document,"click");
+  observable=of([1],2,3,4,5);
+  observable2=range(1,5);
 
   observer={
     next:(value: any)=>console.log("next-",value),
@@ -18,6 +19,6 @@ export class AppComponent {
 
   constructor(){
     const sub1=this.observable.subscribe(this.observer);
-    const sub2=this.observable.subscribe(this.observer);
+    const sub2=this.observable2.subscribe(this.observer);
   }
 }
