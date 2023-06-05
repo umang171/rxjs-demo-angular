@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, fromEvent } from 'rxjs';
+import { map, reduce, scan } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -8,25 +8,21 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable = fromEvent(document, 'scroll');
-
+  observable = from([1,2,3,4,5]);
+  observable2=from([1,2,3,4,5]);
   constructor() {
+    // reduce
     this.observable.pipe(
-      map(() => this.calculateScrollPercentage())
+      reduce((prev,next)=>prev+next)
     )
-    .subscribe(value=>{
-      const scrollbarElement = document.getElementById("scrollbar");
-      if (scrollbarElement) {
-        scrollbarElement.style.width = `${value}%`;
-      }
-    });
+    .subscribe(console.log);
+    // scan
+    this.observable2.pipe(
+      scan((prev,next)=>prev+next)
+    )
+    .subscribe(console.log)
+
   }
 
-  calculateScrollPercentage() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-
-    return (scrollTop / (scrollHeight - clientHeight)) * 100;
-  }
+ 
 }
