@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, distinctUntilChanged, distinctUntilKeyChanged, first, from, fromEvent, interval, map, of, take, takeUntil, takeWhile } from 'rxjs';
+import { auditTime, debounceTime, fromEvent, sampleTime, throttleTime } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,24 +7,17 @@ import { Observable, distinctUntilChanged, distinctUntilKeyChanged, first, from,
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable =of(1,1,2,'2',3,3,3,4,5,3);
-  observable2 =from([
-    {name:"Umang",code:1},
-    {name:"Umang",code:2},
-    {name:"Umang",code:3},
-  ]);
+  // observable =fromEvent(document,'click');
+  observable =fromEvent(document,'keyup');
+ 
   constructor(){
     
     this.observable
     .pipe(
-      distinctUntilChanged()
-    )
-    .subscribe(console.log);
-
-    this.observable2
-    .pipe(
-      distinctUntilKeyChanged('name'),
-      map((obj)=>obj.name)
+      // debounceTime(1000)
+      // throttleTime(1000)
+      // sampleTime(1000)
+      auditTime(1000)
     )
     .subscribe(console.log);
   }
