@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { from, fromEvent } from 'rxjs';
-import { map, reduce, scan, tap } from 'rxjs/operators';
+import { from, fromEvent, interval } from 'rxjs';
+import { filter, map, mapTo, reduce, scan, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -8,23 +8,26 @@ import { map, reduce, scan, tap } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable = from([1,2,3,4,5]);
-  observable2=from([30,45,60]);
+  observable = interval(1000);
   constructor() {
-    // reduce
+    
     this.observable.pipe(
-      tap(val=>console.log("before:",val)),
-      reduce((prev,next)=>prev+next),
-      tap(val=>console.log("after:",val))
+      mapTo(-1),
+      scan((prev,curr)=>prev+curr,11),
+      filter(value=>value>=0)
     )
-    .subscribe(console.log);
-    // scan
-    this.observable2.pipe(
-      scan((prev,next)=>prev+next,15)
-    )
-    .subscribe(console.log)
-
-  }
-
- 
+    .subscribe((value)=>{
+      const timer=document.getElementById("timer");
+      if(timer){
+        timer.innerHTML=value.toString();
+      }
+      if(value==0){
+        const message=document.getElementById("message");
+        if(message){
+          message.innerHTML="This is message";
+        }
+      }
+    }
+    );
+  } 
 }
