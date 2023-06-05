@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { auditTime, debounceTime, fromEvent, sampleTime, throttleTime } from 'rxjs';
+import { concatMap, exhaustMap, fromEvent, interval, mergeMap, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,18 +7,18 @@ import { auditTime, debounceTime, fromEvent, sampleTime, throttleTime } from 'rx
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  // observable =fromEvent(document,'click');
-  observable =fromEvent(document,'keyup');
+  observable =interval(1000);
+  observable2 =fromEvent(document,"click");
  
   constructor(){
     
-    this.observable
+    this.observable2
     .pipe(
-      // debounceTime(1000)
-      // throttleTime(1000)
-      // sampleTime(1000)
-      auditTime(1000)
-    )
+        // mergeMap(()=>this.observable)
+        // switchMap(()=>this.observable)
+        // concatMap(()=>this.observable.pipe(take(3))),
+        exhaustMap(()=>this.observable.pipe(take(3))),
+      )
     .subscribe(console.log);
   }
   
