@@ -1,16 +1,19 @@
 import { compileClassMetadata } from '@angular/compiler';
 import { Component } from '@angular/core';
-import { Observable, from, fromEvent, interval, of, range, timer } from 'rxjs';
+import { filter, from, map } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  // observable=interval(1000);
-  observable=timer(0,1000);
+  observable=from([1,2,3,4,5]);
   constructor(){
-    this.observable.subscribe(console.log);
+    this.observable.pipe(
+      map(val=>val*10),
+      filter(val=>val>=30)
+    )
+    .subscribe(console.log);
   }
   
 }
