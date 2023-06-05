@@ -12,7 +12,7 @@ export class AppComponent {
     let count=0;
     const id=setInterval(()=>{
       subscriber.next(count);
-      subscriber.complete();
+      // subscriber.complete();
       count++;
     },1000);
     return ()=>{
@@ -29,7 +29,12 @@ export class AppComponent {
 
   constructor(){
     console.log("before");
-    this.observable.subscribe(this.observer);
+    const sub1=this.observable.subscribe(this.observer);
+    const sub2=this.observable.subscribe(this.observer);
     console.log("after");    
+    setTimeout(()=>{
+      sub1.unsubscribe();
+      sub2.unsubscribe();
+    },3500);
   }
 }
