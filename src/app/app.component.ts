@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { concatMap, exhaustMap, fromEvent, interval, mergeMap, switchMap, take } from 'rxjs';
+import { combineLatest, concat, endWith, forkJoin, from, merge, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,19 +7,19 @@ import { concatMap, exhaustMap, fromEvent, interval, mergeMap, switchMap, take }
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable =interval(1000);
-  observable2 =fromEvent(document,"click");
- 
+  observable =from([1,2,3,4]);
+  observable2 =from(['a','b','c','d']);
   constructor(){
-    
-    this.observable2
-    .pipe(
-        // mergeMap(()=>this.observable)
-        // switchMap(()=>this.observable)
-        // concatMap(()=>this.observable.pipe(take(3))),
-        exhaustMap(()=>this.observable.pipe(take(3))),
-      )
-    .subscribe(console.log);
+    // this.observable.
+    // pipe(
+    //   startWith('a','b','c'),
+    //   endWith('a','b','c'),
+    // ).subscribe(console.log);
+
+    // merge(this.observable,this.observable2).subscribe(console.log);
+    // concat(this.observable,this.observable2).subscribe(console.log);
+    // combineLatest(this.observable,this.observable2).subscribe(console.log);
+    forkJoin(this.observable,this.observable2).subscribe(console.log);
   }
   
 }
