@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { from, fromEvent } from 'rxjs';
-import { map, reduce, scan } from 'rxjs/operators';
+import { map, reduce, scan, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -9,16 +9,18 @@ import { map, reduce, scan } from 'rxjs/operators';
 })
 export class AppComponent {
   observable = from([1,2,3,4,5]);
-  observable2=from([1,2,3,4,5]);
+  observable2=from([30,45,60]);
   constructor() {
     // reduce
     this.observable.pipe(
-      reduce((prev,next)=>prev+next)
+      tap(val=>console.log("before:",val)),
+      reduce((prev,next)=>prev+next),
+      tap(val=>console.log("after:",val))
     )
     .subscribe(console.log);
     // scan
     this.observable2.pipe(
-      scan((prev,next)=>prev+next)
+      scan((prev,next)=>prev+next,15)
     )
     .subscribe(console.log)
 
