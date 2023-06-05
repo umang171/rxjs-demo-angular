@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { first, fromEvent, map, of, take } from 'rxjs';
+import { first, fromEvent, interval, map, of, take, takeUntil, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,24 +7,23 @@ import { first, fromEvent, map, of, take } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable = of(1,2,3,4,5);
-  observable2 =fromEvent(document,"click");
-
+  observable =fromEvent(document,"click");
+  observable2=interval(1000);
   constructor() {
-    this.observable
-    .pipe(
-      take(3)
-    )
-    .subscribe(console.log);
-
-    this.observable2
-    .pipe(
-      map((event)=>(
-        {
-          x:(event as MouseEvent).clientX,
-          y:(event as MouseEvent).clientY
-      })),
-      first(({x})=>x>200)
+    
+    // this.observable
+    // .pipe(
+    //   map((event)=>(
+    //     {
+    //       x:(event as MouseEvent).clientX,
+    //       y:(event as MouseEvent).clientY
+    //   })),
+    //   takeWhile(({x})=>x<=500)
+    // )
+    // .subscribe(console.log);
+  
+    this.observable2.pipe(
+      takeUntil(this.observable)
     )
     .subscribe(console.log);
   } 
