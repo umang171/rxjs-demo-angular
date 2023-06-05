@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { from, fromEvent, interval } from 'rxjs';
-import { filter, map, mapTo, reduce, scan, tap } from 'rxjs/operators';
+import { first, fromEvent, map, of, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,26 +7,25 @@ import { filter, map, mapTo, reduce, scan, tap } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable = interval(1000);
+  observable = of(1,2,3,4,5);
+  observable2 =fromEvent(document,"click");
+
   constructor() {
-    
-    this.observable.pipe(
-      mapTo(-1),
-      scan((prev,curr)=>prev+curr,11),
-      filter(value=>value>=0)
+    this.observable
+    .pipe(
+      take(3)
     )
-    .subscribe((value)=>{
-      const timer=document.getElementById("timer");
-      if(timer){
-        timer.innerHTML=value.toString();
-      }
-      if(value==0){
-        const message=document.getElementById("message");
-        if(message){
-          message.innerHTML="This is message";
-        }
-      }
-    }
-    );
+    .subscribe(console.log);
+
+    this.observable2
+    .pipe(
+      map((event)=>(
+        {
+          x:(event as MouseEvent).clientX,
+          y:(event as MouseEvent).clientY
+      })),
+      first(({x})=>x>200)
+    )
+    .subscribe(console.log);
   } 
 }
