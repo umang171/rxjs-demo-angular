@@ -1,19 +1,32 @@
-import { compileClassMetadata } from '@angular/compiler';
 import { Component } from '@angular/core';
-import { filter, from, fromEvent, map, mapTo, pluck } from 'rxjs';
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  observable=fromEvent(document,"keyup");
-  constructor(){
+  observable = fromEvent(document, 'scroll');
+
+  constructor() {
     this.observable.pipe(
-      // map(event=>(event as KeyboardEvent).code)
-      pluck('code')
+      map(() => this.calculateScrollPercentage())
     )
-    .subscribe(console.log);
+    .subscribe(value=>{
+      const scrollbarElement = document.getElementById("scrollbar");
+      if (scrollbarElement) {
+        scrollbarElement.style.width = `${value}%`;
+      }
+    });
   }
-  
+
+  calculateScrollPercentage() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+
+    return (scrollTop / (scrollHeight - clientHeight)) * 100;
+  }
 }
